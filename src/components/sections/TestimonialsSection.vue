@@ -9,37 +9,37 @@ const testimonials = [
   {
     quote: "Gracias a Bridge Gen confirmé mi llamado y comencé mi pasantía en una iglesia local.",
     name: "Ricardo",
-    role: "Participante (vende rinaware)",
+    role: "Participante",
     avatar: "https://images.pexels.com/photos/1680172/pexels-photo-1680172.jpeg?auto=compress&cs=tinysrgb&w=120"
   },
   {
     quote: "Las amistades y mentorías que encontré aquí cambiaron mi vida.",
     name: "Ale",
-    role: "Líder emergente (División)",
+    role: "Líder emergente",
     avatar: "https://i.pinimg.com/736x/eb/65/0a/eb650aabe629c35ffaeeaac39bdc51f7.jpg"
   },
   {
     quote: "Encontré un espacio seguro para crecer en mi llamado y conectar con otros líderes con propósito.",
     name: "Rudis",
-    role: "Hijo de pastor (le pegaban de niño)",
+    role: "Hijo de pastor",
     avatar: "https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=120"
   },
   {
     quote: "Bridge Gen me ayudó a encontrar mi propósito y a conectarme con otros líderes que comparten mi visión.",
     name: "Jonathan",
-    role: "Líder de multimedia (Parte de la sinfonía que roncan)",
+    role: "Líder de multimedia",
     avatar: "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=120"
   },
   {
     quote: "Gracias a Bridge Gen encontré un espacio seguro para crecer en mi llamado y conectar con otros líderes con propósito.",
     name: "Romel",
-    role: "Ministro de alabanza (el que más habla)",
+    role: "Ministro de alabanza",
     avatar: "https://images.pexels.com/photos/220457/pexels-photo-220457.jpeg?auto=compress&cs=tinysrgb&w=120"
   },
   {
     quote: "Bridge Gen me ayudó a encontrar mi propósito y a conectarme con otros líderes que comparten mi visión.",
     name: "Cristian",
-    role: "Ps. Asociado (Números 12:3 el más humilde de todos los hombres 🙏🏼)",
+    role: "Ps. Asociado",
     avatar: "https://images.pexels.com/photos/220451/pexels-photo-220451.jpeg?auto=compress&cs=tinysrgb&w=120"
   }
 ]
