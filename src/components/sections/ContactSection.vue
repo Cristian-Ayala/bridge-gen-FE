@@ -5,6 +5,8 @@ defineProps<{
   id: string
 }>()
 
+const WEB3FORMS_ACCESS_KEY = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY
+
 const form = ref({
   name: '',
   email: '',
@@ -12,30 +14,65 @@ const form = ref({
   message: '',
   church: '',
   submitted: false,
-  error: false
+  error: false,
+  loading: false
 })
 
-const submitForm = () => {
-  // In a real application, you would send this data to a server
-  // This is just a simulation for now
-  if (form.value.name && form.value.email && form.value.message) {
-    form.value.submitted = true
-    form.value.error = false
-    
-    // Reset form after successful submission
-    setTimeout(() => {
-      form.value = {
-        name: '',
-        email: '',
-        phone: '',
-        message: '',
-        church: '',
-        submitted: false,
-        error: false
-      }
-    }, 5000)
-  } else {
+const submitForm = async () => {
+  // Validate required fields
+  if (!form.value.name || !form.value.email || !form.value.message) {
     form.value.error = true
+    return
+  }
+
+  form.value.loading = true
+  form.value.error = false
+
+  try {
+    const response = await fetch("https://api.web3forms.com/submit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        access_key: WEB3FORMS_ACCESS_KEY,
+        name: form.value.name,
+        email: form.value.email,
+        phone: form.value.phone,
+        message: form.value.message,
+        church: form.value.church,
+        subject: "Nuevo mensaje de contacto - Bridge Generation"
+      }),
+    })
+
+    const result = await response.json()
+
+    if (result.success) {
+      form.value.submitted = true
+      form.value.error = false
+
+      // Reset form after successful submission
+      setTimeout(() => {
+        form.value = {
+          name: '',
+          email: '',
+          phone: '',
+          message: '',
+          church: '',
+          submitted: false,
+          error: false,
+          loading: false
+        }
+      }, 5000)
+    } else {
+      form.value.error = true
+    }
+  } catch (error) {
+    console.error('Error al enviar el formulario:', error)
+    form.value.error = true
+  } finally {
+    form.value.loading = false
   }
 }
 </script>
@@ -45,13 +82,13 @@ const submitForm = () => {
     <div class="container">
       <h2 class="section-title">Contáctanos</h2>
       <p class="section-subtitle">¿Tienes preguntas? ¿Deseas colaborar o invitar a tu iglesia?<br>Escríbenos y con gusto conectamos.</p>
-      
+
       <div class="max-w-4xl mx-auto mt-12 bg-white rounded-lg shadow-md overflow-hidden">
         <div class="grid grid-cols-1 md:grid-cols-2">
           <!-- Contact Info -->
           <div class="bg-primary-700 p-8 text-white">
             <h3 class="text-2xl font-bold mb-6">Información de contacto</h3>
-            
+
             <div class="space-y-6">
               <div class="flex items-start">
                 <svg class="w-6 h-6 mr-3 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -62,7 +99,7 @@ const submitForm = () => {
                   <a href="mailto:contacto@bridgegen.org" class="text-secondary-300 hover:text-white transition-colors">contacto@bridgegen.org</a>
                 </div>
               </div>
-              
+
               <div class="flex items-start">
                 <svg class="w-6 h-6 mr-3 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
@@ -72,7 +109,7 @@ const submitForm = () => {
                   <a href="tel:+1234567890" class="text-secondary-300 hover:text-white transition-colors">+123 456 7890</a>
                 </div>
               </div>
-              
+
               <div class="flex items-start">
                 <svg class="w-6 h-6 mr-3 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -84,7 +121,7 @@ const submitForm = () => {
                 </div>
               </div>
             </div>
-            
+
             <div class="mt-10">
               <p class="text-lg font-medium mb-4">Síguenos</p>
               <div class="flex space-x-4">
@@ -108,52 +145,61 @@ const submitForm = () => {
               </div>
             </div>
           </div>
-          
+
           <!-- Contact Form -->
           <div class="p-8">
             <h3 class="text-2xl font-bold mb-6 text-gray-800">Envíanos un mensaje</h3>
-            
+
             <div v-if="form.submitted" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
               <p>¡Gracias por tu mensaje! Nos pondremos en contacto contigo pronto.</p>
             </div>
-            
+
             <div v-if="form.error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
               <p>Por favor completa todos los campos requeridos.</p>
             </div>
-            
+
             <form @submit.prevent="submitForm">
               <div class="mb-4">
                 <label for="name" class="block text-gray-700 font-medium mb-2">Nombre *</label>
                 <input type="text" id="name" v-model="form.name" required
                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
               </div>
-              
+
               <div class="mb-4">
                 <label for="email" class="block text-gray-700 font-medium mb-2">Email *</label>
                 <input type="email" id="email" v-model="form.email" required
                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
               </div>
-              
+
               <div class="mb-4">
                 <label for="phone" class="block text-gray-700 font-medium mb-2">Teléfono</label>
                 <input type="tel" id="phone" v-model="form.phone"
                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
               </div>
-              
+
               <div class="mb-4">
                 <label for="church" class="block text-gray-700 font-medium mb-2">Iglesia</label>
                 <input type="text" id="church" v-model="form.church"
                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
               </div>
-              
+
               <div class="mb-6">
                 <label for="message" class="block text-gray-700 font-medium mb-2">Mensaje *</label>
                 <textarea id="message" v-model="form.message" required rows="4"
                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"></textarea>
               </div>
-              
-              <button type="submit" class="btn btn-primary w-full">
-                Enviar mensaje
+
+              <button type="submit" :disabled="form.loading" class="btn btn-primary w-full">
+                <span v-if="form.loading" class="flex items-center justify-center">
+                  <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Enviando...
+                </span>
+                <span v-else>
+                  Enviar mensaje
+                </span>
               </button>
             </form>
           </div>
