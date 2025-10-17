@@ -155,7 +155,7 @@ const handleSwipe = () => {
 }
 
 // Auto-play functionality
-let autoPlayInterval: number | null = null
+let autoPlayInterval: ReturnType<typeof setInterval> | null = null
 
 const startAutoPlay = () => {
   autoPlayInterval = setInterval(nextSlide, 5000)
@@ -175,6 +175,41 @@ onMounted(() => {
 onUnmounted(() => {
   stopAutoPlay()
 })
+
+// Función para manejar la reserva de lugar
+const reserveSpot = (chapter: Chapter) => {
+  // Mapear los nombres de capítulos a las razones de contacto
+  const reasonMap: Record<string, string> = {
+    'Santa Ana': 'Inscribirme al evento de Santa Ana',
+    'San Salvador': 'Inscribirme al evento de San Salvador',
+    'San Miguel': 'Inscribirme al evento de San Miguel'
+  }
+
+  const reason = reasonMap[chapter.name] || 'Quiero unirme a Bridge Gen'
+
+  // Buscar la sección de contacto y hacer scroll
+  const contactSection = document.getElementById('contacto')
+  if (contactSection) {
+    // Scroll suave a la sección
+    contactSection.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
+    })
+
+    // Actualizar la URL con el hash
+    window.history.pushState(null, '', '#contacto')
+
+    // Esperar un momento para que el scroll termine y luego establecer la razón
+    setTimeout(() => {
+      const event = new CustomEvent('setContactReason', {
+        detail: { reason }
+      })
+      window.dispatchEvent(event)
+    }, 800)
+  } else {
+    console.warn('No se encontró la sección de contacto con ID "contacto"')
+  }
+}
 </script>
 
 <template>
@@ -231,7 +266,7 @@ onUnmounted(() => {
                     :class="{
                       'bg-green-500 text-white': chapter.status === 'Activo',
                       'bg-yellow-500 text-white': chapter.status === 'En planificación',
-                      'bg-blue-500 text-white': chapter.status === 'En desarrollo'
+                      '!bg-blue-500 text-white': chapter.status === 'En desarrollo'
                     }"
                   >
                     {{ chapter.status }}
@@ -280,16 +315,15 @@ onUnmounted(() => {
                     </div>
                   </div>
 
-                  <a
-                    :href="chapter.registrationUrl"
+                  <button
+                    @click="reserveSpot(chapter)"
                     class="btn btn-secondary inline-flex items-center group"
-                    target="_blank"
                   >
                     Reserva tu lugar
                     <svg class="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                     </svg>
-                  </a>
+                  </button>
                 </div>
               </div>
             </div>

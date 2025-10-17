@@ -10,7 +10,6 @@ const navLinks = [
   { name: 'Servicios', href: '#servicios' },
   { name: 'Evento', href: '#evento' },
   { name: 'Participar', href: '#participar' },
-  { name: 'Membresías', href: '#membresias' },
   { name: 'Testimonios', href: '#testimonios' },
   { name: 'Contacto', href: '#contacto' }
 ]

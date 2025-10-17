@@ -16,7 +16,7 @@ const testimonials = [
     quote: "Las amistades y mentorías que encontré aquí cambiaron mi vida.",
     name: "Ale",
     role: "Líder emergente",
-    avatar: "https://i.pinimg.com/736x/eb/65/0a/eb650aabe629c35ffaeeaac39bdc51f7.jpg"
+    avatar: "/img/ale.jpg"
   },
   {
     quote: "Encontré un espacio seguro para crecer en mi llamado y conectar con otros líderes con propósito.",
@@ -40,7 +40,7 @@ const testimonials = [
     quote: "Bridge Gen me ayudó a encontrar mi propósito y a conectarme con otros líderes que comparten mi visión.",
     name: "Cristian",
     role: "Ps. Asociado",
-    avatar: "https://images.pexels.com/photos/220451/pexels-photo-220451.jpeg?auto=compress&cs=tinysrgb&w=120"
+    avatar: "/img/cris.jpeg"
   }
 ]
 
